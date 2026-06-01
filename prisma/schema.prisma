@@ -1,8 +1,15 @@
-import { defineConfig, env } from "prisma/config";
+generator client {
+  provider = "prisma-client-js"
+}
 
-export default defineConfig({
-  schema: "./prisma/schema.prisma",
-  datasource: {
-    url: env("DIRECT_URL"),
-  },
-});
+datasource db {
+  provider = "postgresql"
+}
+
+model Generation {
+  id        String   @id @default(uuid())
+  userId    String   
+  prompt    String   
+  content   String   
+  createdAt DateTime @default(now())
+}
