@@ -2,16 +2,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// The connection URLs are removed from here for Prisma 7 compatibility
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
-model User {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  credits   Int      @default(5)
+// -------------------------------------------------
+// PHASE 2: The History Database Table
+// -------------------------------------------------
+model Generation {
+  id        String   @id @default(uuid())
+  userId    String   // Stores the user's Clerk ID
+  prompt    String   // What the user asked for
+  content   String   // The text the AI returned
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
