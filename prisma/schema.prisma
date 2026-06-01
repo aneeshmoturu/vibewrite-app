@@ -4,8 +4,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
+// -------------------------------------------------
+// PHASE 2: The History Database Table
+// -------------------------------------------------
 model Generation {
   id        String   @id @default(uuid())
   userId    String   
