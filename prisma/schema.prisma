@@ -1,19 +1,8 @@
-generator client {
-  provider = "prisma-client-js"
-}
+import { defineConfig, env } from "prisma/config";
 
-// The connection URLs are removed from here for Prisma 7 compatibility
-datasource db {
-  provider = "postgresql"
-}
-
-// -------------------------------------------------
-// PHASE 2: The History Database Table
-// -------------------------------------------------
-model Generation {
-  id        String   @id @default(uuid())
-  userId    String   // Stores the user's Clerk ID
-  prompt    String   // What the user asked for
-  content   String   // The text the AI returned
-  createdAt DateTime @default(now())
-}
+export default defineConfig({
+  schema: "./prisma/schema.prisma",
+  datasource: {
+    url: env("DIRECT_URL"),
+  },
+});
