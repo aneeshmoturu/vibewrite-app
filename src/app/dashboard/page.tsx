@@ -10,10 +10,11 @@ export default async function DashboardPage() {
   const { userId } = await auth();
   if (!userId) redirect("/");
 
-  let user = await prisma.user.findUnique({ where: { userId: userId } });
-  if (!user) {
-    user = await prisma.user.create({ data: { userId: userId, credits: 5 } });
-  }
+  // PHASE 2: Fetch the user's generation history from the database!
+  const generations = await prisma.generation.findMany({
+    where: { userId: userId },
+    orderBy: { createdAt: 'desc' }
+  });
 
   return (
     <div className="relative min-h-screen bg-[#030303] text-zinc-50 font-sans">
@@ -39,9 +40,10 @@ export default async function DashboardPage() {
           </div>
           
           <div className="flex items-center gap-6">
+            {/* Replaced Credits with a Generation Counter */}
             <div className="flex items-center gap-2 bg-[#111]/80 border border-white/10 px-5 py-2 rounded-full backdrop-blur-md shadow-inner">
               <Zap className="w-4 h-4 text-indigo-400" />
-              <span className="text-sm font-medium text-zinc-200">{user.credits} Credits Remaining</span>
+              <span className="text-sm font-medium text-zinc-200">{generations.length} Generations</span>
             </div>
             <div className="ring-2 ring-white/10 rounded-full shadow-lg transition-transform hover:scale-105 bg-black flex items-center justify-center">
               <UserButton appearance={{ elements: { avatarBox: "w-10 h-10" } }} />
