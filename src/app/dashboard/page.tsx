@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
 import GeneratorForm from "./GeneratorForm"; 
-import { Zap } from "lucide-react";
+import { Zap, Clock } from "lucide-react";
 import InteractiveWireframe from "../InteractiveWireframe";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -32,13 +33,23 @@ export default async function DashboardPage() {
             </h1>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* NEW: Link to History Vault */}
+            <Link 
+              href="/dashboard/history"
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md transition-colors pointer-events-auto"
+            >
+              <Clock className="w-4 h-4 text-zinc-400" />
+              <span className="text-sm font-medium text-zinc-300 hidden sm:inline">Vault</span>
+            </Link>
+
+            {/* Existing Credit Badge */}
             <div className="flex items-center gap-2 bg-[#111]/80 border border-white/10 px-5 py-2 rounded-full backdrop-blur-md shadow-inner">
               <Zap className="w-4 h-4 text-indigo-400" />
-              {/* This line right here brings your credit counter back to the screen! */}
-              <span className="text-sm font-medium text-zinc-200">{user.credits} Credits Left</span>
+              <span className="text-sm font-medium text-zinc-200">{user.credits} <span className="hidden sm:inline">Credits Left</span></span>
             </div>
-            <div className="ring-2 ring-white/10 rounded-full shadow-lg transition-transform hover:scale-105 bg-black flex items-center justify-center">
+            
+            <div className="ring-2 ring-white/10 rounded-full shadow-lg transition-transform hover:scale-105 bg-black flex items-center justify-center pointer-events-auto">
               <UserButton appearance={{ elements: { avatarBox: "w-10 h-10" } }} />
             </div>
           </div>
