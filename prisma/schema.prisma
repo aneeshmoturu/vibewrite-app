@@ -3,9 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+// -------------------------------------------------
+// PHASE 1.5: The User Table (For Credits)
+// -------------------------------------------------
+model User {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  credits   Int      @default(5)
 }
 
 // -------------------------------------------------
