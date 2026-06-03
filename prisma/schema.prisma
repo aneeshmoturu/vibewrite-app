@@ -21,9 +21,11 @@ model User {
 // PHASE 2: The History Database Table
 // -------------------------------------------------
 model Generation {
-  id        String   @id @default(uuid())
-  userId    String   
-  prompt    String   
-  content   String   
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String   // Links to the Clerk User ID
+  productName String   @default("")
+  keywords    String   @default("")
+  tone        String   @default("")
+  content     String   // The actual AI generated text
+  createdAt   DateTime @default(now())
 }

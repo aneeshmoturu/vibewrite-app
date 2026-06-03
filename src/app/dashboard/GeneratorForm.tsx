@@ -5,6 +5,7 @@ import { generateProductCopy } from "@/actions/generate";
 import { motion } from "framer-motion";
 import { Sparkles, Copy, Check, AlertCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner"; 
 
 export default function GeneratorForm() {
   const [loading, setLoading] = useState(false);
@@ -30,6 +31,12 @@ export default function GeneratorForm() {
   const handleCopy = () => {
     navigator.clipboard.writeText(result);
     setCopied(true);
+    
+    toast.success("Copied to clipboard", {
+      description: "Your copy is ready to be pasted anywhere.",
+      duration: 3000,
+    });
+
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -122,6 +129,7 @@ export default function GeneratorForm() {
           {/* The Content Area */}
           <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
             
+            {/* Idle State */}
             {!result && !error && !loading && (
               <div className="h-full flex flex-col items-center justify-center text-zinc-600 space-y-4">
                 <Sparkles className="w-8 h-8 opacity-20" />
@@ -131,13 +139,28 @@ export default function GeneratorForm() {
               </div>
             )}
 
+            {/* NEW: Premium Skeleton Loading State */}
             {loading && (
-              <div className="h-full flex flex-col items-center justify-center space-y-4">
-                <div className="w-6 h-6 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
-                <p className="text-sm text-zinc-500 animate-pulse">Drafting optimal copy...</p>
+              <div className="flex flex-col space-y-6 pt-2 w-full">
+                {/* Simulated Heading */}
+                <div className="h-6 w-1/3 bg-white/5 rounded-md animate-pulse" />
+                
+                {/* Simulated Paragraph 1 */}
+                <div className="space-y-3">
+                  <div className="h-4 w-full bg-white/5 rounded-md animate-pulse" />
+                  <div className="h-4 w-11/12 bg-white/5 rounded-md animate-pulse" style={{ animationDelay: '100ms' }} />
+                  <div className="h-4 w-4/5 bg-white/5 rounded-md animate-pulse" style={{ animationDelay: '200ms' }} />
+                </div>
+
+                {/* Simulated Paragraph 2 */}
+                <div className="space-y-3 pt-4">
+                  <div className="h-4 w-full bg-white/5 rounded-md animate-pulse" style={{ animationDelay: '150ms' }} />
+                  <div className="h-4 w-5/6 bg-white/5 rounded-md animate-pulse" style={{ animationDelay: '250ms' }} />
+                </div>
               </div>
             )}
 
+            {/* Error State */}
             {error && !loading && (
               <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-400 text-sm">
                 <AlertCircle className="w-5 h-5 shrink-0" />
@@ -145,6 +168,7 @@ export default function GeneratorForm() {
               </div>
             )}
 
+            {/* Success Result State */}
             {result && !loading && (
               <motion.div 
                 initial={{ opacity: 0 }} 

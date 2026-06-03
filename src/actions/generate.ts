@@ -29,14 +29,17 @@ export async function generateProductCopy(formData: FormData) {
     You must seamlessly include the following key features: ${keywords}. 
     Make it punchy, persuasive, and ready to publish on a website. Keep it strictly under 3 paragraphs.`;
 
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });    const aiResponse = await model.generateContent(prompt);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });    
+    const aiResponse = await model.generateContent(prompt);
     const generatedCopy = aiResponse.response.text();
 
-    // 2. Save the generation to history
+    // 2. Save the generation to history (UPDATED TO MATCH NEW SCHEMA)
     await prisma.generation.create({
       data: {
         userId: userId,
-        prompt: `[${tone}] ${productName} - ${keywords}`,
+        productName: productName,
+        keywords: keywords,
+        tone: tone,
         content: generatedCopy,
       },
     });
@@ -48,6 +51,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });    const 
     });
 
     revalidatePath("/dashboard");
+    revalidatePath("/dashboard/history"); // Also revalidate the Vault!
 
     return { success: true, data: generatedCopy };
 
