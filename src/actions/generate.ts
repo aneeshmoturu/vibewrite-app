@@ -29,8 +29,7 @@ export async function generateProductCopy(formData: FormData) {
     You must seamlessly include the following key features: ${keywords}. 
     Make it punchy, persuasive, and ready to publish on a website. Keep it strictly under 3 paragraphs.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const aiResponse = await model.generateContent(prompt);
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });    const aiResponse = await model.generateContent(prompt);
     const generatedCopy = aiResponse.response.text();
 
     // 2. Save the generation to history
