@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "sonner"; // <-- We added this import
+import { Toaster } from "sonner";
+import { ThemeProvider } from "../components/ThemeProvider"; // <-- Imported Provider
 import "./globals.css";
 
 export const metadata = {
@@ -14,14 +15,20 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="bg-[#030303] antialiased">
-          {/* This renders your actual pages */}
-          {children}
+      {/* suppressHydrationWarning is required by next-themes */}
+      <html lang="en" suppressHydrationWarning>
+        <body className="bg-white dark:bg-[#030303] text-zinc-900 dark:text-zinc-50 antialiased transition-colors duration-300">
           
-          {/* We added this Toaster component! */}
-          {/* 'richColors' makes success toasts green and error toasts red */}
-          <Toaster position="bottom-right" theme="dark" closeButton richColors />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange={false}
+          >
+            {children}
+            <Toaster position="bottom-right" theme="system" closeButton richColors />
+          </ThemeProvider>
+          
         </body>
       </html>
     </ClerkProvider>
