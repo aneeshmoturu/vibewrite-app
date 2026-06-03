@@ -18,9 +18,6 @@ export async function generateProductCopy(formData: FormData) {
 
   if (!productName || !keywords) return { error: "Please fill out all fields." };
 
-  const user = await prisma.user.findUnique({ where: { userId } });
-  if (!user || user.credits <= 0) return { error: "Not enough credits. Please upgrade!" };
-
   try {
     // Construct the prompt for the AI
     const prompt = `You are a world-class e-commerce copywriter. Write a highly engaging product description for a product named "${productName}". 
@@ -29,15 +26,20 @@ export async function generateProductCopy(formData: FormData) {
     Make it punchy, persuasive, and ready to publish on a website. Keep it strictly under 3 paragraphs.`;
 
     // Call the Gemini model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });    const aiResponse = await model.generateContent(prompt);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const aiResponse = await model.generateContent(prompt);
     const generatedCopy = aiResponse.response.text();
 
-    // Deduct 1 credit
-    await prisma.user.update({
-      where: { userId },
-      data: { credits: user.credits - 1 },
+    // PHASE 2: Save the history into the new Generation table!
+    await prisma.generation.create({
+      data: {
+        userId: userId,
+        prompt: `[${tone}] ${productName} - ${keywords}`,
+        content: generatedCopy,
+      },
     });
 
+    // Refresh the dashboard data so the counter goes up automatically
     revalidatePath("/dashboard");
 
     // Send the real AI text back to the screen
